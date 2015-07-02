@@ -1,0 +1,6 @@
+[submodule "ship-1"]
+	path = ship-1
+	url = https://github.com/KochiyaOcean/poi-alter-ship-panel-sono-ichi.git
+[submodule "ship-2"]
+	path = ship-2
+	url = https://github.com/KochiyaOcean/poi-alter-ship-panel-sono-ni.git
