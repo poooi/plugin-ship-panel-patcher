@@ -1,0 +1,86 @@
+#ShipView .btn-group {
+  display: flex;
+  width: 100%;
+}
+#ShipView .btn-group .btn {
+  flex: 1;
+}
+#ShipView .hidden {
+  display: none;
+}
+#ShipView .show {
+  display: block;
+}
+#ShipView table td {
+  overflow: hidden;
+  white-space: nowrap;
+}
+#ShipView table tr:nth-child(odd) td {
+  font-size: 120%;
+  padding-top: 12px;
+}
+#ShipView table tr:nth-child(even) td {
+  font-size: 90%;
+  padding-top: 4px;
+}
+#ShipView table tr td {
+  padding-bottom: 0px;
+  border: none;
+  vertical-align: middle;
+}
+#ShipView .slotitem-container img {
+  width: 30px;
+  height: 30px;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  margin-left: -5px;
+}
+#ShipView .progress {
+  border-radius: 0px;
+  background-color: inherit;
+}
+#ShipView .hp-progress .progress {
+  height: 10px;
+}
+#ShipView .hp-progress .progress .progress-bar {
+  font-size: 13px;
+  line-height: 4px;
+}
+#ShipView .material-data {
+  font-size: 10px;
+  line-height: 10px;
+}
+#ShipView .hp-progress .progress {
+  position: relative;
+  margin-bottom: 1px;
+}
+#ShipView .hp-progress .progress-bar span span {
+  position: absolute;
+  width: 100%;
+  display: block;
+}
+#ShipView .table {
+  margin-bottom: 1px;
+}
+#ShipView .alert {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+}
+#ShipView .material-progress .progress {
+  margin-bottom: 2px;
+  height: 5px;
+  margin-right: 15px;
+  position: relative;
+}
+#ShipView .material-progress .progress .progress-bar {
+  font-size: 5px;
+  width: 100%;
+  line-height: 5px;
+}
+#ShipView .material-progress .progress .progress-bar span span {
+  position: absolute;
+  width: 100%;
+  display: block;
+}
+data {font-size:11px;}
