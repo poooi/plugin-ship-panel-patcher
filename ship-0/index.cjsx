@@ -34,17 +34,34 @@ getMaterialStyle = (percent) ->
     'info'
   else
     'success'
-getCondStyle = (cond) ->
-  if cond > 49
-    color: '#FFFF00'
-  else if cond < 20
-    color: '#DD514C'
-  else if cond < 30
-    color: '#F37B1D'
-  else if cond < 40
-    color: '#FFC880'
+getFontStyle = (theme)  ->
+  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
+    color: '#FFF'
   else
-    null
+    color: '#000'
+getCondStyle = (cond) ->
+  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
+    if cond > 49
+      color: '#FFFF00'
+    else if cond < 20
+      color: '#DD514C'
+    else if cond < 30
+      color: '#F37B1D'
+    else if cond < 40
+      color: '#FFC880'
+    else
+      null
+  else
+    if cond > 49
+      'text-shadow': '0 0 3px #FFFF00'
+    else if cond < 20
+      'text-shadow': '0 0 3px #DD514C'
+    else if cond < 30
+      'text-shadow': '0 0 3px #F37B1D'
+    else if cond < 40
+      'text-shadow': '0 0 3px #FFC880'
+    else
+      null
 getDeckState = (deck, ndocks) ->
   state = 0
   {$ships, _ships} = window
@@ -155,7 +172,7 @@ module.exports =
           ndocks = body.api_ndock.map (e) ->
             e.api_ship_id
           inBattle = [false, false, false, false]
-        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship'
+        when '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_hokyu/charge', '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3', '/kcsapi/api_req_kousyou/destroyship', '/kcsapi/api_req_kaisou/powerup'
           true
         when '/kcsapi/api_req_map/start'
           deckId = parseInt(postBody.api_deck_id) - 1
@@ -171,6 +188,24 @@ module.exports =
               if ship.api_nowhp / ship.api_maxhp < 0.250001
                 shipInfo = $ships[ship.api_ship_id]
                 toggleModal '进击注意！', "Lv. #{ship.api_lv} - #{shipInfo.api_name} 大破，可能会被击沉！"
+        when '/kcsapi/api_get_member/ndock'
+          ndocks = body.map (e) -> e.api_ship_id
+        when '/kcsapi/api_req_nyukyo/speedchange'
+          if body.api_result == 1
+            id = ndocks[postBody.api_ndock_id - 1]
+            for deck, i in decks
+              for shipId in deck.api_ship
+                if shipId == id
+                  ship = _ships[id]
+                  ship.api_nowhp = ship.api_maxhp
+        when '/kcsapi/api_req_nyukyo/start'
+          if body.api_result == 1 and postBody.api_highspeed == '1'
+            id = parseInt(postBody.api_ship_id)
+            for deck, i in decks
+              for shipId in deck.api_ship
+                if shipId == id
+                  ship = _ships[id]
+                  ship.api_nowhp = ship.api_maxhp
         else
           flag = false
       return unless flag
@@ -229,7 +264,7 @@ module.exports =
           {$ships, $shipTypes, _ships} = window
           for deck, i in @state.decks
             <div className="ship-deck" className={if @state.activeDeck == i then 'show' else 'hidden'} key={i}>
-              <Alert bsStyle={getStyle @state.states[i]}>
+              <Alert style={getFontStyle window.theme}>
                 <Grid>
                   <Col xs={2}>
                     总 Lv.{@state.messages[i][0]}
