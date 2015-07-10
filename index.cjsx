@@ -12,14 +12,14 @@ module.exports =
   description: '改变舰队信息面板的样式'
   author: 'KochiyaOcean'
   link: 'https://github.com/KochiyaOcean'
-  version: '2.3.0'
+  version: '3.0.0 beta'
   reactClass: React.createClass
     getInitialState: ->
       patch: 0
     handlePatch: (e) ->
-      targetIndex = path.join(ROOT, 'views', 'components', 'ship', 'index.cjsx')
+      targetIndex = path.join(ROOT, 'views', 'components', 'ship', 'parts', 'panebody.cjsx')
       targetCss = path.join(ROOT, 'views', 'components', 'ship', 'assets', 'ship.css')
-      srcIndex = path.join(__dirname, "ship-#{@state.patch}", 'index.cjsx')
+      srcIndex = path.join(__dirname, "ship-#{@state.patch}", 'parts', 'panebody.cjsx')
       srcCss = path.join(__dirname, "ship-#{@state.patch}", 'assets', 'ship.css')
       fs.removeSync(targetIndex)
       fs.removeSync(targetCss)
