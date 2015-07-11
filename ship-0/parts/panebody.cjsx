@@ -16,7 +16,7 @@ getMaterialStyle = (percent) ->
     'success'
 
 getCondStyle = (cond) ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
+  if window.isDarkTheme
     if cond > 49
       color: '#FFFF00'
     else if cond < 20
@@ -40,10 +40,7 @@ getCondStyle = (cond) ->
       null
 
 getFontStyle = (theme)  ->
-  if window.theme.indexOf('dark') != -1 or window.theme == 'slate' or window.theme == 'superhero'
-    color: '#FFF'
-  else
-    color: '#000'
+  if window.isDarkTheme then color: '#FFF' else color: '#000'
 
 getCondCountdown = (deck) ->
   {$ships, $slotitems, _ships} = window
@@ -124,6 +121,16 @@ TopAlert = React.createClass
   timeDelta: 0
   cond: 0
   isMount: false
+  handleResponse: (e) ->
+    {method, path, body, postBody} = e.detail
+    refreshFlag = false
+    switch path
+      when '/kcsapi/api_get_member/deck', '/kcsapi/api_get_member/ship_deck', '/kcsapi/api_get_member/ship3'
+        refreshFlag = true
+      when '/kcsapi/api_port/port', '/kcsapi/api_req_hensei/change', '/kcsapi/api_req_kaisou/powerup', '/kcsapi/api_req_kousyou/destroyship'
+        refreshFlag = true
+    if refreshFlag
+      @setAlert()
   setAlert: ->
     decks = window._decks
     @messages = getDeckMessage decks[@props.deckIndex]
@@ -147,14 +154,16 @@ TopAlert = React.createClass
       if @isMount
         $("#ShipView #deck-condition-countdown-#{@props.deckIndex}-#{@componentId}").innerHTML = resolveTime(@countdown - @timeDelta)
       if @countdown == @timeDelta and @props.deckState < 4
-        notify "#{@props.names} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
+        notify "#{@props.deckName} 疲劳回复完成", {icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png')}
     @interval = clearInterval @interval if flag
   componentWillMount: ->
     @componentId = Math.ceil(Date.now() * Math.random())
     @setAlert()
   componentDidMount: ->
     @isMount = true
+    window.addEventListener 'game.response', @handleResponse
   componentWillUnmount: ->
+    window.removeEventListener 'game.response', @handleResponse
     @interval = clearInterval @interval if @interval?
   render: ->
     <Alert style={getFontStyle window.theme}>
@@ -180,13 +189,8 @@ TopAlert = React.createClass
     </Alert>
 
 PaneBody = React.createClass
-  # getInitialState: ->
-  #
   shouldComponentUpdate: (nextProps, nextState)->
-    if nextProps.activeDeck isnt @props.activeDeck
-      false
-    else
-      true
+    nextProps.activeDeck is @props.deckIndex
   render: ->
     <div>
       <TopAlert
