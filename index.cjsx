@@ -19,12 +19,15 @@ module.exports =
     handlePatch: (e) ->
       targetIndex = path.join(ROOT, 'views', 'components', 'ship', 'parts', 'panebody.cjsx')
       targetCss = path.join(ROOT, 'views', 'components', 'ship', 'assets', 'ship.css')
-      srcIndex = path.join(__dirname, "ship-#{@state.patch}", 'parts', 'panebody.cjsx')
+      srcPatch = path.join(__dirname, "ship-#{@state.patch}", 'parts', 'patch.txt')
       srcCss = path.join(__dirname, "ship-#{@state.patch}", 'assets', 'ship.css')
-      fs.removeSync(targetIndex)
+      str = fs.readFileSync targetIndex, "utf-8"
+      pat = fs.readFileSync srcPatch, "utf-8"
       fs.removeSync(targetCss)
-      fs.copySync(srcIndex, targetIndex)
       fs.copySync(srcCss, targetCss)
+      str = str.replace /(            \[([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*            \])/g, pat
+      fs.removeSync(targetIndex)
+      fs.writeFileSync(targetIndex, str)
     handleKeyChange: (e) ->
       img = document.getElementById('imgShow')
       pp = path.join(__dirname, "#{e.target.value}.png")
