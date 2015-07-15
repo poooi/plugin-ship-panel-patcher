@@ -34,6 +34,7 @@
   padding-bottom: 0px;
   border: none;
   vertical-align: middle;
+  line-height: 1.42857143;
 }
 #ShipView .slotitem-container {
   position: relative;
@@ -45,6 +46,12 @@
   font-size: 12px;
   left: -3px;
   bottom: -3px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 #ShipView .slotitem-container span.show {
   display: inline !important;
